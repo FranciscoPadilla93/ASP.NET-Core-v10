@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../Business/Business.csproj" />
+  <Project Path="../Data/Data.csproj" />
+  <Project Path="../Entities/Entities.csproj" />
+  <Project Path="Api.csproj" />
+</Solution>

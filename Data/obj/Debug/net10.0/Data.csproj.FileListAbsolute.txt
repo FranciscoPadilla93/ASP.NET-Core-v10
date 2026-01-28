@@ -1,0 +1,15 @@
+C:\Developer\Back End\Net Core\Data\bin\Debug\net10.0\Data.deps.json
+C:\Developer\Back End\Net Core\Data\bin\Debug\net10.0\Data.dll
+C:\Developer\Back End\Net Core\Data\bin\Debug\net10.0\Data.pdb
+C:\Developer\Back End\Net Core\Data\bin\Debug\net10.0\Entities.dll
+C:\Developer\Back End\Net Core\Data\bin\Debug\net10.0\Entities.pdb
+C:\Developer\Back End\Net Core\Data\obj\Debug\net10.0\Data.csproj.AssemblyReference.cache
+C:\Developer\Back End\Net Core\Data\obj\Debug\net10.0\Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Developer\Back End\Net Core\Data\obj\Debug\net10.0\Data.AssemblyInfoInputs.cache
+C:\Developer\Back End\Net Core\Data\obj\Debug\net10.0\Data.AssemblyInfo.cs
+C:\Developer\Back End\Net Core\Data\obj\Debug\net10.0\Data.csproj.CoreCompileInputs.cache
+C:\Developer\Back End\Net Core\Data\obj\Debug\net10.0\Data.csproj.Up2Date
+C:\Developer\Back End\Net Core\Data\obj\Debug\net10.0\Data.dll
+C:\Developer\Back End\Net Core\Data\obj\Debug\net10.0\refint\Data.dll
+C:\Developer\Back End\Net Core\Data\obj\Debug\net10.0\Data.pdb
+C:\Developer\Back End\Net Core\Data\obj\Debug\net10.0\ref\Data.dll

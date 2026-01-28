@@ -1,0 +1,11 @@
+C:\Developer\Back End\Net Core\Entities\bin\Debug\net10.0\Entities.deps.json
+C:\Developer\Back End\Net Core\Entities\bin\Debug\net10.0\Entities.dll
+C:\Developer\Back End\Net Core\Entities\bin\Debug\net10.0\Entities.pdb
+C:\Developer\Back End\Net Core\Entities\obj\Debug\net10.0\Entities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Developer\Back End\Net Core\Entities\obj\Debug\net10.0\Entities.AssemblyInfoInputs.cache
+C:\Developer\Back End\Net Core\Entities\obj\Debug\net10.0\Entities.AssemblyInfo.cs
+C:\Developer\Back End\Net Core\Entities\obj\Debug\net10.0\Entities.csproj.CoreCompileInputs.cache
+C:\Developer\Back End\Net Core\Entities\obj\Debug\net10.0\Entities.dll
+C:\Developer\Back End\Net Core\Entities\obj\Debug\net10.0\refint\Entities.dll
+C:\Developer\Back End\Net Core\Entities\obj\Debug\net10.0\Entities.pdb
+C:\Developer\Back End\Net Core\Entities\obj\Debug\net10.0\ref\Entities.dll
