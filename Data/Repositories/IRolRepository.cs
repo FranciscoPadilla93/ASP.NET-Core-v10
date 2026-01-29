@@ -4,10 +4,10 @@ namespace Data.Repositories
 {
     public interface IRolRepository
     {
-        Task<IEnumerable<Roles>> GetListRoles();
-        Task<Roles?> GetById(int id);
-        Task<GenericResponse> Create(RolesSet role);
-        Task<GenericResponse> Update(RolesSet role);
-        Task<GenericResponse> Delete(int id);
+        Task<ApiResponse<IEnumerable<Roles>>> GetListRoles();
+        Task<ApiResponse<Roles>> GetById(int id);
+        Task<ApiResponse<int>> Create(RolesSet role);
+        Task<ApiResponse<int>> Update(RolesSet role);
+        Task<ApiResponse<int>> Delete(int id);
     }
 }

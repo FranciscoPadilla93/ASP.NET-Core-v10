@@ -13,58 +13,54 @@ namespace Api.Controllers
         public RolController(IRolService service) => _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRoles() => Ok(await _service.GetListRoles());
+        public async Task<IActionResult> GetAllRoles()
+        {
+            var response = await _service.GetListRoles();
+            return Ok(response);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRoleById(int id) {
-            var rol = await _service.GetById(id);
-            if (rol == null) 
-                return NotFound(new { 
-                    message = "Rol no encontrado" }
-                );
-            return Ok(rol);
+            var response = await _service.GetById(id);
+
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] RolesSet roleRequest)
         {
-            if (roleRequest == null)
-                return BadRequest("Los datos son obligatorios.");
-
             var result = await _service.CreateRol(roleRequest);
 
             if (!result.Success)
                 return BadRequest(result);
 
-            return CreatedAtAction(nameof(GetRoleById), new { id = result.id }, result);
+            return Ok(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] RolesSet roleRequest)
         {
-            if (roleRequest == null)
-                return BadRequest("Los datos son obligatorios.");
-
             var result = await _service.UpdateRol(roleRequest);
 
             if (!result.Success)
                 return BadRequest(result);
 
-            return CreatedAtAction(nameof(GetRoleById), new { id = result.id }, result);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            if (id < 1)
-                return BadRequest("Los datos son obligatorios.");
-
             var result = await _service.DeleteRol(id);
           
-            if (result.Success) 
-                return Ok(new { message = result.Message});
+            if (!result.Success)
+                return BadRequest(result);
 
-            return BadRequest(new { message = result.Message });
+            return Ok(result);
         }
     }
 }

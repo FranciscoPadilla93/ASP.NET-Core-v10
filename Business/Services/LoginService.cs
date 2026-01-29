@@ -23,10 +23,14 @@ namespace Business.Services
 
         public async Task<string?> Login(string login, string password)
         {
-            var user = await _userRepo.GetClienteByEmail(login);
+            var response = await _userRepo.GetClienteByEmail(login);
 
             // Si el usuario no existe o la contraseña no coincide con el Hash
-            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            if (!response.Success || response.Data == null)
+                return null;
+
+            var user = response.Data;
+            if(!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
                 return null;
 
             return GenerarTokenJWT(user);

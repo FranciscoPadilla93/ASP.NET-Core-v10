@@ -10,24 +10,39 @@ namespace Data.Repositories
         private readonly DapperContext _context;
         public UserRepository(DapperContext context) => _context = context;
 
-        public async Task<IEnumerable<User>> GetListUsers()
+        public async Task<ApiResponse<IEnumerable<User>>> GetListUsers()
         {
             using var connection = _context.CreateConnection();
-            return await connection.QueryAsync<User>("Stp_Get_UsersList", commandType: CommandType.StoredProcedure);
+            var users = await connection.QueryAsync<User>("Stp_Get_UsersList", commandType: CommandType.StoredProcedure);
+
+            if (users == null || !users.Any())
+                return new ApiResponse<IEnumerable<User>>(false, "No se encontraron usuarios");
+
+            return new ApiResponse<IEnumerable<User>>(true, "Usuarios recuperados", users);
         }
-        public async Task<User?> GetById(int idUser)
+        public async Task<ApiResponse<User>> GetById(int idUser)
         {
             using var conn = _context.CreateConnection();
-            return await conn.QueryFirstOrDefaultAsync<User>("Stp_Get_UserByID", new { idUser }, commandType: CommandType.StoredProcedure);
+            var user = await conn.QueryFirstOrDefaultAsync<User>("Stp_Get_UserByID", new { idUser }, commandType: CommandType.StoredProcedure);
+
+            if (user == null)
+                return new ApiResponse<User>(false, "Usuario no encontrado.");
+
+            return new ApiResponse<User>(true, "Usuario recuperado", user);
         }
 
-        public async Task<User?> GetClienteByEmail(string login)
+        public async Task<ApiResponse<User>> GetClienteByEmail(string login)
         {
             using var connection = _context.CreateConnection();
-            return await connection.QueryFirstOrDefaultAsync<User>("Stp_Get_UserByLogin", new { login }, commandType: CommandType.StoredProcedure);
+            var user = await connection.QueryFirstOrDefaultAsync<User>("Stp_Get_UserByLogin", new { login }, commandType: CommandType.StoredProcedure);
+
+            if (user == null)
+                return new ApiResponse<User>(false, "Usuario no encontrado.");
+
+            return new ApiResponse<User>(true, "Usuario recuperado", user);
         }
 
-        public async Task<GenericResponse> Create(UserSet r)
+        public async Task<ApiResponse<int>> Create(UserSet r)
         {
             using var conn = _context.CreateConnection();
             var p = new DynamicParameters();
@@ -46,15 +61,14 @@ namespace Data.Repositories
 
             await conn.ExecuteAsync("Stp_Set_UserCreate", p, commandType: CommandType.StoredProcedure);
 
-            return new GenericResponse
-            {
-                Success = p.Get<bool>("Success"),
-                Message = p.Get<string>("Message"),
-                id = p.Get<int>("idUser")
-            };
+            return new ApiResponse<int>(
+                p.Get<bool>("Success"),
+                p.Get<string>("Message"),
+                p.Get<int>("idUser")
+            );
         }
 
-        public async Task<GenericResponse> Update(UserSet r)
+        public async Task<ApiResponse<int>> Update(UserSet r)
         {
             using var conn = _context.CreateConnection();
             var p = new DynamicParameters();
@@ -72,15 +86,14 @@ namespace Data.Repositories
             p.Add("Message", dbType: DbType.String, size: 500, direction: ParameterDirection.Output);
             await conn.ExecuteAsync("Stp_Set_UserUpdate", p, commandType: CommandType.StoredProcedure);
 
-            return new GenericResponse
-            {
-                Success = p.Get<bool>("Success"),
-                Message = p.Get<string>("Message"),
-                id = r.idRol
-            };
+            return new ApiResponse<int>(
+                p.Get<bool>("Success"),
+                p.Get<string>("Message"),
+                p.Get<int>("idUser")
+            );
         }
 
-        public async Task<GenericResponse> Delete(int idUser)
+        public async Task<ApiResponse<int>> Delete(int idUser)
         {
             using var conn = _context.CreateConnection();
             var p = new DynamicParameters();
@@ -93,12 +106,12 @@ namespace Data.Repositories
 
             await conn.ExecuteAsync("Stp_Set_UserDelete", p, commandType: CommandType.StoredProcedure);
 
-            return new GenericResponse
-            {
-                Success = p.Get<bool>("Success"),
-                Message = p.Get<string>("Message"),
-                id = idUser
-            };
+            return new ApiResponse<int>
+            (
+                p.Get<bool>("Success"),
+                p.Get<string>("Message"),
+                p.Get<int>("idUser")
+            );
         }
     }
 }

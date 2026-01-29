@@ -9,18 +9,28 @@ namespace Data.Repositories
     {
         private readonly DapperContext _context;
         public RolRepository(DapperContext context) => _context = context;
-        public async Task<IEnumerable<Roles>> GetListRoles()
+        public async Task<ApiResponse<IEnumerable<Roles>>> GetListRoles()
         {
             using var connection = _context.CreateConnection();
-            return await connection.QueryAsync<Roles>("Stp_Get_RolesList", commandType: CommandType.StoredProcedure);
+            var roles = await connection.QueryAsync<Roles>("Stp_Get_RolesList", commandType: CommandType.StoredProcedure);
+
+            if (roles == null || !roles.Any())
+                return new ApiResponse<IEnumerable<Roles>>(false, "No se encontraron roles");
+
+            return new ApiResponse<IEnumerable<Roles>>(true, "Roles recuperados", roles);
         }
-        public async Task<Roles?> GetById(int idRol)
+        public async Task<ApiResponse<Roles>> GetById(int idRol)
         {
             using var conn = _context.CreateConnection();
-            return await conn.QueryFirstOrDefaultAsync<Roles>("Stp_Get_RoleByID", new { idRol }, commandType: CommandType.StoredProcedure);
+            var rol = await conn.QueryFirstOrDefaultAsync<Roles>("Stp_Get_RoleByID", new { idRol }, commandType: CommandType.StoredProcedure);
+
+            if (rol == null)
+                return new ApiResponse<Roles>(false, "Rol no encontrado.");
+
+            return new ApiResponse<Roles>(true, "Rol recuperado.", rol);
         }
 
-        public async Task<GenericResponse> Create(RolesSet r)
+        public async Task<ApiResponse<int>> Create(RolesSet r)
         {
             using var conn = _context.CreateConnection();
             var p = new DynamicParameters();
@@ -36,15 +46,14 @@ namespace Data.Repositories
 
             await conn.ExecuteAsync("Stp_Set_RolCreate", p, commandType: CommandType.StoredProcedure);
 
-            return new GenericResponse
-            {
-                Success = p.Get<bool>("Success"),
-                Message = p.Get<string>("Message"),
-                id = p.Get<int>("idRole")
-            };
+            return new ApiResponse<int>(
+                p.Get<bool>("Success"),
+                p.Get<string>("Message"),
+                p.Get<int>("idRole")
+            );
         }
 
-        public async Task<GenericResponse> Update(RolesSet r)
+        public async Task<ApiResponse<int>> Update(RolesSet r)
         {
             using var conn = _context.CreateConnection();
             var p = new DynamicParameters();
@@ -59,15 +68,14 @@ namespace Data.Repositories
             p.Add("Message", dbType: DbType.String, size: 500, direction: ParameterDirection.Output);
             await conn.ExecuteAsync("Stp_Set_RolUpdate", p, commandType: CommandType.StoredProcedure);
 
-            return new GenericResponse
-            {
-                Success = p.Get<bool>("Success"),
-                Message = p.Get<string>("Message"),
-                id = r.idRol
-            };
+            return new ApiResponse<int>(
+                p.Get<bool>("Success"),
+                p.Get<string>("Message"),
+                p.Get<int>("idRole")
+            );
         }
 
-        public async Task<GenericResponse> Delete(int id)
+        public async Task<ApiResponse<int>> Delete(int id)
         {
             using var conn = _context.CreateConnection();
             var p = new DynamicParameters();
@@ -80,12 +88,12 @@ namespace Data.Repositories
 
             await conn.ExecuteAsync("Stp_Set_RolDelete", p, commandType: CommandType.StoredProcedure);
 
-            return new GenericResponse
-            {
-                Success = p.Get<bool>("Success"),
-                Message = p.Get<string>("Message"),
-                id = id
-            };
+            return new ApiResponse<int>
+            (
+                p.Get<bool>("Success"),
+                p.Get<string>("Message"),
+                p.Get<int>("idRole")
+            );
         }
     }
 }

@@ -1,3 +1,9 @@
 ﻿Api/.vs
 Api/bin
 Api/obj
+Data/bin
+Business/bin
+Business/obj
+Data/obj
+Entities/bin
+Entities/obj

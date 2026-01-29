@@ -1,3 +1,4 @@
+using Api.Middlewares;
 using Business.Services;
 using Data.Repositories;
 using static Data.Context.Context;
@@ -32,6 +33,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
