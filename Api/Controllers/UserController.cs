@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Business.Services;
 using Entities.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -10,7 +11,14 @@ namespace Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService  _service;
-        public UserController(IUserService service) => _service = service;
+        private readonly IValidator<UserSet> _validator;
+        public UserController(IUserService service, IValidator<UserSet> validator)
+        {
+            _service = service;
+            _validator = validator;
+        }
+            
+            
 
         [HttpGet]
         public async Task<IActionResult> GetAllUsers() 
@@ -36,6 +44,13 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] UserSet userRequest)
         {
+            var validationResult = await _validator.ValidateAsync(userRequest);
+            if (!validationResult.IsValid)
+            {
+                var errors = string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(new ApiResponse<int>(false, errors));
+            }
+
             var result = await _service.CreateUser(userRequest);
 
             if (!result.Success)
@@ -47,6 +62,13 @@ namespace Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UserSet userRequest)
         {
+            var validationResult = await _validator.ValidateAsync(userRequest);
+            if (!validationResult.IsValid)
+            {
+                var errors = string.Join(" | ", validationResult.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(new ApiResponse<int>(false, errors));
+            }
+
             var result = await _service.UpdateUser(userRequest);
 
             if (!result.Success)

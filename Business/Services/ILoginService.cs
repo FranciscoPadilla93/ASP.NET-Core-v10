@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Entities.Models;
 
 namespace Business.Services
 {
     public interface ILoginService
     {
-        Task<string?> Login(string login, string password);
+        Task<AuthResponse?> Login(string login, string password);
+        Task<AuthResponse?> RefreshToken(string token); 
     }
 }
